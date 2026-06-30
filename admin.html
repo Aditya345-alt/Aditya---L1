@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Aditya-L1: Mission Control Director Panel</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;800;900&family=Space+Grotesk:wght@300;400;500;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-color: #030107;
+      --solar-orange: #ff5e00;
+      --solar-gold: #ffb834;
+      --glow-color: rgba(255, 94, 0, 0.25);
+      --text-primary: #f4f4f7;
+      --text-secondary: #9e9eb2;
+      --success: #39ff14;
+      --warning: #ffb700;
+      --danger: #ff0055;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      user-select: none;
+    }
+
+    body {
+      background-color: var(--bg-color);
+      color: var(--text-primary);
+      font-family: 'Space Grotesk', sans-serif;
+      overflow-x: hidden;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      background-image: 
+        radial-gradient(circle at 10% 20%, rgba(90, 40, 150, 0.1) 0%, transparent 40%),
+        radial-gradient(circle at 90% 80%, rgba(255, 94, 0, 0.08) 0%, transparent 45%);
+    }
+
+    /* Grid layout */
+    header {
+      padding: 2rem 3rem 1.5rem;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    h1 {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 1.4rem;
+      font-weight: 800;
+      letter-spacing: 0.15em;
+      color: #fff;
+    }
+
+    .logo-accent {
+      color: var(--solar-gold);
+    }
+
+    .header-links a {
+      color: var(--text-secondary);
+      text-decoration: none;
+      font-family: 'Orbitron', sans-serif;
+      font-size: 0.75rem;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      padding: 0.5rem 1rem;
+      border-radius: 4px;
+      transition: all 0.3s;
+    }
+
+    .header-links a:hover {
+      color: #fff;
+      border-color: var(--solar-gold);
+      box-shadow: 0 0 10px rgba(255, 184, 52, 0.2);
+    }
+
+    main {
+      flex: 1;
+      max-width: 1200px;
+      width: 100%;
+      margin: 2rem auto;
+      padding: 0 2rem;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2rem;
+    }
+
+    @media (max-width: 900px) {
+      main {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    /* Cards */
+    .control-card {
+      background: rgba(12, 8, 22, 0.65);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 8px;
+      padding: 2rem;
+      backdrop-filter: blur(15px);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    }
+
+    h2 {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 1.1rem;
+      letter-spacing: 0.1em;
+      margin-bottom: 1.5rem;
+      color: var(--solar-gold);
+      border-left: 3px solid var(--solar-orange);
+      padding-left: 0.75rem;
+    }
+
+    .form-group {
+      margin-bottom: 1.5rem;
+    }
+
+    label {
+      display: block;
+      font-family: 'Orbitron', sans-serif;
+      font-size: 0.7rem;
+      letter-spacing: 0.1em;
+      color: var(--text-secondary);
+      margin-bottom: 0.5rem;
+    }
+
+    /* Custom select / inputs */
+    select, input[type="text"] {
+      width: 100%;
+      background: rgba(0, 0, 0, 0.4);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      padding: 0.75rem 1rem;
+      border-radius: 4px;
+      color: #fff;
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 0.9rem;
+      outline: none;
+      transition: all 0.3s;
+    }
+
+    select:focus, input[type="text"]:focus {
+      border-color: var(--solar-orange);
+      box-shadow: 0 0 8px rgba(255, 94, 0, 0.3);
+    }
+
+    /* Switch toggle */
+    .switch-container {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid rgba(255, 255, 255, 0.04);
+      padding: 1rem;
+      border-radius: 6px;
+      margin-bottom: 1.5rem;
+    }
+
+    .switch-label {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 0.8rem;
+      letter-spacing: 0.05em;
+    }
+
+    .switch {
+      position: relative;
+      display: inline-block;
+      width: 50px;
+      height: 26px;
+    }
+
+    .switch input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+
+    .slider {
+      position: absolute;
+      cursor: pointer;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: rgba(255, 255, 255, 0.1);
+      transition: .4s;
+      border-radius: 34px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .slider:before {
+      position: absolute;
+      content: "";
+      height: 18px;
+      width: 18px;
+      left: 3px;
+      bottom: 3px;
+      background-color: white;
+      transition: .4s;
+      border-radius: 50%;
+    }
+
+    input:checked + .slider {
+      background-color: var(--solar-orange);
+    }
+
+    input:checked + .slider:before {
+      transform: translateX(24px);
+    }
+
+    .btn-submit {
+      width: 100%;
+      font-family: 'Orbitron', sans-serif;
+      font-size: 0.85rem;
+      font-weight: bold;
+      color: #000;
+      background: linear-gradient(135deg, var(--solar-orange), var(--solar-gold));
+      border: none;
+      padding: 1rem;
+      border-radius: 4px;
+      cursor: pointer;
+      box-shadow: 0 4px 15px rgba(255, 94, 0, 0.25);
+      transition: all 0.3s;
+    }
+
+    .btn-submit:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(255, 94, 0, 0.45);
+    }
+
+    /* Telemetry grid values */
+    .telemetry-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.25rem;
+    }
+
+    .metric-box {
+      background: rgba(0, 0, 0, 0.3);
+      border: 1px solid rgba(255, 255, 255, 0.04);
+      padding: 1.25rem;
+      border-radius: 6px;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .metric-label {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 0.6rem;
+      color: var(--text-secondary);
+      letter-spacing: 0.08em;
+    }
+
+    .metric-value {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 1.4rem;
+      font-weight: bold;
+      color: #fff;
+    }
+
+    .status-badge {
+      display: inline-block;
+      font-family: 'Orbitron', sans-serif;
+      font-size: 0.75rem;
+      font-weight: bold;
+      padding: 0.3rem 0.8rem;
+      border-radius: 4px;
+      text-align: center;
+      letter-spacing: 0.05em;
+    }
+
+    .status-badge.nominal {
+      background-color: rgba(57, 255, 20, 0.1);
+      border: 1px solid var(--success);
+      color: var(--success);
+      box-shadow: 0 0 10px rgba(57, 255, 20, 0.1);
+    }
+
+    .status-badge.warning {
+      background-color: rgba(255, 183, 0, 0.1);
+      border: 1px solid var(--warning);
+      color: var(--warning);
+      box-shadow: 0 0 10px rgba(255, 183, 0, 0.1);
+    }
+
+    .status-badge.danger {
+      background-color: rgba(255, 0, 85, 0.1);
+      border: 1px solid var(--danger);
+      color: var(--danger);
+      box-shadow: 0 0 10px rgba(255, 0, 85, 0.1);
+      animation: alert-flash 1s infinite alternate;
+    }
+
+    @keyframes alert-flash {
+      0% { opacity: 0.5; }
+      100% { opacity: 1; }
+    }
+
+    footer {
+      padding: 2rem;
+      text-align: center;
+      font-family: 'Orbitron', sans-serif;
+      font-size: 0.6rem;
+      color: var(--text-secondary);
+      border-top: 1px solid rgba(255, 255, 255, 0.06);
+      margin-top: auto;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1><span class="logo-accent">ADITYA</span>-L1: MISSION CONTROL</h1>
+    <div class="header-links">
+      <a href="index.html" target="_blank">OPEN MISSION VIEW ↗</a>
+    </div>
+  </header>
+
+  <main>
+    <!-- CONTROL FORM CARD -->
+    <div class="control-card">
+      <h2>TELEMETRY OVERRIDES</h2>
+      
+      <form id="control-form">
+        <div class="form-group">
+          <label for="systemState">SYSTEM OPERATIONAL STATUS</label>
+          <select id="systemState">
+            <option value="NOMINAL">NOMINAL</option>
+            <option value="SAFE MODE">SAFE MODE</option>
+            <option value="WARNING">WARNING</option>
+            <option value="CRITICAL">CRITICAL</option>
+          </select>
+        </div>
+
+        <div class="switch-container">
+          <span class="switch-label">TRIGGER SOLAR FLARE / CME ALERT</span>
+          <label class="switch">
+            <input type="checkbox" id="alertActive">
+            <span class="slider"></span>
+          </label>
+        </div>
+
+        <div class="form-group" id="msg-group" style="display: none;">
+          <label for="alertMessage">ALERT BROADCAST BANNER TEXT</label>
+          <input type="text" id="alertMessage" placeholder="e.g. SOLAR PARTICLE EVENT FLUX ALARM" value="WARNING: CME FLARE PARTICLES DETECTED - SHIELD HIGH SENSORS">
+        </div>
+
+        <button type="submit" class="btn-submit">BROADCAST TELEMETRY CHANGE</button>
+      </form>
+    </div>
+
+    <!-- READ-ONLY REALTIME DATA VIEW -->
+    <div class="control-card">
+      <h2>REAL-TIME FEEDS (SSE)</h2>
+      
+      <div class="telemetry-grid">
+        <div class="metric-box">
+          <span class="metric-label">OPERATIONS STATUS</span>
+          <div>
+            <span id="live-status" class="status-badge nominal">NOMINAL</span>
+          </div>
+        </div>
+        
+        <div class="metric-box">
+          <span class="metric-label">SOLAR WIND SPEED</span>
+          <span id="live-wind" class="metric-value">420 km/s</span>
+        </div>
+
+        <div class="metric-box">
+          <span class="metric-label">INTERPLANETARY B-FIELD FLUX</span>
+          <span id="live-flux" class="metric-value">8.4 nT</span>
+        </div>
+
+        <div class="metric-box">
+          <span class="metric-label">CORONA PLASMA HEAT</span>
+          <span id="live-temp" class="metric-value">1.25 M K</span>
+        </div>
+
+        <div class="metric-box" style="grid-column: span 2;">
+          <span class="metric-label">MAGNETOMETER DIRECTION VECTOR</span>
+          <span id="live-mag" class="metric-value">X: 0.0 | Y: 0.0 | Z: 0.0</span>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer>
+    ISRO TELEMETRY, TRACKING AND COMMAND NETWORK (ISTRAC) | GROUND STATION DATA INGESTION BACKEND
+  </footer>
+
+  <script>
+    const alertToggle = document.getElementById('alertActive');
+    const msgGroup = document.getElementById('msg-group');
+    const form = document.getElementById('control-form');
+
+    // Toggle custom message field visibility
+    alertToggle.addEventListener('change', () => {
+      msgGroup.style.display = alertToggle.checked ? 'block' : 'none';
+    });
+
+    // Form submission handler to update backend state
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      
+      const payload = {
+        systemState: document.getElementById('systemState').value,
+        alertActive: alertToggle.checked,
+        alertMessage: document.getElementById('alertMessage').value
+      };
+
+      try {
+        const res = await fetch('/api/control', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(payload)
+        });
+
+        const data = await res.json();
+        if (data.success) {
+          alert('Telemetry successfully updated on active instances!');
+        } else {
+          alert('Failed to update: ' + data.error);
+        }
+      } catch (err) {
+        alert('Network error connecting to control endpoint.');
+      }
+    });
+
+    // Connect to Server-Sent Events stream to render live readings
+    const sse = new EventSource('/api/telemetry/stream');
+    
+    sse.onmessage = (event) => {
+      const state = JSON.parse(event.data);
+
+      // Render status badge
+      const statusBadge = document.getElementById('live-status');
+      statusBadge.textContent = state.systemState;
+      statusBadge.className = 'status-badge'; // reset
+      
+      if (state.alertActive) {
+        statusBadge.classList.add('danger');
+        statusBadge.textContent = 'ALERT: ' + state.systemState;
+      } else if (state.systemState === 'NOMINAL') {
+        statusBadge.classList.add('nominal');
+      } else if (state.systemState === 'WARNING' || state.systemState === 'SAFE MODE') {
+        statusBadge.classList.add('warning');
+      } else {
+        statusBadge.classList.add('danger');
+      }
+
+      // Render metrics
+      document.getElementById('live-wind').textContent = `${state.solarWindSpeed} km/s`;
+      document.getElementById('live-flux').textContent = `${state.magneticFlux} nT`;
+      document.getElementById('live-temp').textContent = `${state.coronaTemp} M K`;
+      document.getElementById('live-mag').textContent = `X: ${state.magX} | Y: ${state.magY} | Z: ${state.magZ}`;
+
+      // Synchronize form settings with server state on load
+      if (!form.dataset.initialized) {
+        document.getElementById('systemState').value = state.systemState;
+        alertToggle.checked = state.alertActive;
+        if (state.alertActive) {
+          msgGroup.style.display = 'block';
+          document.getElementById('alertMessage').value = state.alertMessage;
+        }
+        form.dataset.initialized = 'true';
+      }
+    };
+  </script>
+</body>
+</html>

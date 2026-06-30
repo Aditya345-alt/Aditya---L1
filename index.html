@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Aditya-L1: Journey to the Sun | Scroll Experience</title>
+  <!-- SEO Meta Tags -->
+  <meta name="description" content="Explore India's first solar space observatory, Aditya-L1, through an interactive scroll-animation experience. Learn about payloads, orbit, and mission objectives.">
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;800;900&family=Space+Grotesk:wght@300;400;500;700&display=swap" rel="stylesheet">
+  <!-- Stylesheets -->
+  <link rel="stylesheet" href="style.css">
+  <!-- GSAP & ScrollTrigger -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+</head>
+<body>
+
+  <!-- LOADING SCREEN -->
+  <div id="loader" class="loader-container">
+    <div class="loader-content">
+      <div class="sun-glow"></div>
+      <div class="loader-spinner">
+        <div class="orbit-path">
+          <div class="orbiting-spacecraft"></div>
+        </div>
+      </div>
+      <h1 class="loader-title">ADITYA-L1</h1>
+      <p class="loader-subtitle">PRELOADING SOLAR OBSERVATORY TELEMETRY...</p>
+      <div class="progress-bar-container">
+        <div id="loader-progress" class="progress-bar-fill"></div>
+      </div>
+      <div id="loader-percentage" class="loader-percentage">0%</div>
+    </div>
+  </div>
+
+  <!-- FIXED CANVAS BACKGROUND -->
+  <div class="canvas-container">
+    <canvas id="aditya-canvas"></canvas>
+    <div class="vignette-overlay"></div>
+    <div class="solar-wind-glow"></div>
+  </div>
+
+  <!-- MAIN SCROLL CONTAINER -->
+  <main id="scroll-wrapper">
+
+    <!-- HEADER / HUD NAV -->
+    <header class="hud-header">
+      <div class="hud-logo">
+        <span class="logo-accent">ADITYA</span>-L1
+      </div>
+      <div class="hud-mission-status">
+        <span class="status-indicator live"></span>
+        <span class="status-text">MISSION LOG: LAGRANGIAN POINT 1</span>
+      </div>
+      <a class="hud-admin-link" href="admin.html" target="_blank" rel="noreferrer">MISSION CONTROL</a>
+    </header>
+
+    <!-- FLOATING COMPASS / INDICATOR -->
+    <div class="telemetry-hud left">
+      <div class="telemetry-item">
+        <span class="telemetry-label">DISTANCE</span>
+        <span class="telemetry-val" id="hud-distance">1,500,000 KM</span>
+      </div>
+      <div class="telemetry-item">
+        <span class="telemetry-label">TARGET</span>
+        <span class="telemetry-val text-gold">SOLAR CORONA</span>
+      </div>
+      <div class="telemetry-item">
+        <span class="telemetry-label">ORBIT</span>
+        <span class="telemetry-val">HALO (L1)</span>
+      </div>
+    </div>
+
+    <div class="telemetry-hud right">
+      <div class="telemetry-item">
+        <span class="telemetry-label">FRAME SEQ</span>
+        <span class="telemetry-val" id="hud-frame">001 / 210</span>
+      </div>
+      <div class="telemetry-item">
+        <span class="telemetry-label">SYSTEM STATE</span>
+        <span class="telemetry-val text-green" id="hud-system-state">NOMINAL</span>
+      </div>
+      <div class="telemetry-item">
+        <span class="telemetry-label">SOLAR WIND</span>
+        <span class="telemetry-val text-gold" id="hud-wind">420 km/s</span>
+      </div>
+      <div class="telemetry-item">
+        <span class="telemetry-label">SCROLL ALT</span>
+        <span class="telemetry-val" id="hud-scroll">0%</span>
+      </div>
+    </div>
+
+    <!-- SCROLL SECTIONS -->
+    <section class="scroll-section" id="sec-hero">
+      <div class="section-content hero-content">
+        <div class="hero-tag">ISRO'S FIRST SOLAR MISSION</div>
+        <h1 class="glitch-title" data-text="ADITYA-L1">ADITYA-L1</h1>
+        <p class="hero-desc text-glow">India's pioneering space-based observatory placed in a halo orbit around the Sun-Earth Lagrangian point L1 to unlock the mysteries of the Sun.</p>
+        <div class="scroll-prompt">
+          <span>SCROLL TO LAUNCH</span>
+          <div class="scroll-arrow"></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="scroll-section" id="sec-mission">
+      <div class="section-content">
+        <div class="glass-card">
+          <div class="card-border"></div>
+          <span class="card-num">01</span>
+          <h2 class="card-title">The Lagrangian Point 1</h2>
+          <p class="card-text">Located 1.5 million kilometers from Earth (about 1% of the Earth-Sun distance), the <strong>L1 Point</strong> provides an uninterrupted view of the Sun without any occultation or eclipses.</p>
+          <div class="card-stats">
+            <div class="stat-box">
+              <span class="stat-num">1.5M</span>
+              <span class="stat-label">Km from Earth</span>
+            </div>
+            <div class="stat-box">
+              <span class="stat-num">0</span>
+              <span class="stat-label">Eclipses Faced</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="scroll-section" id="sec-solar-wind">
+      <div class="section-content right-align">
+        <div class="glass-card">
+          <div class="card-border"></div>
+          <span class="card-num">02</span>
+          <h2 class="card-title">Studying Solar Winds</h2>
+          <p class="card-text">Aditya-L1 monitors solar flares, coronal mass ejections (CMEs), and the energetic particles streaming from the Sun. This helps scientists understand space weather and its immediate impact on Earth's technologies.</p>
+          <div class="card-stats">
+            <div class="stat-box">
+              <span class="stat-num">CME</span>
+              <span class="stat-label">Tracking</span>
+            </div>
+            <div class="stat-box">
+              <span class="stat-num">24/7</span>
+              <span class="stat-label">Observation</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="scroll-section" id="sec-solar-flares">
+      <div class="section-content">
+        <div class="glass-card solar-alert-card">
+          <div class="card-border"></div>
+          <span class="solar-alert-badge"><span class="alert-pill"></span>Solar Flare Forecasting</span>
+          <span class="card-num">03</span>
+          <h2 class="card-title">Solar Flares & Forecasting</h2>
+          <p class="card-text">Solar flares are abrupt, intense bursts of radiation caused by the reconfiguration of magnetic fields in the solar atmosphere. The soft X-ray flux can rise by five to six orders of magnitude within minutes, and the strongest M- and X-class events drive severe space-weather disruptions on Earth and in orbit.</p>
+          <div class="card-stats">
+            <div class="stat-box">
+              <span class="stat-num">10–60</span>
+              <span class="stat-label">Minute Lead Time</span>
+            </div>
+            <div class="stat-box">
+              <span class="stat-num">SOVEREIGN</span>
+              <span class="stat-label">Indian Forecasting</span>
+            </div>
+          </div>
+          <p class="card-text">Forecasting matters because current operational systems are largely reactive: they often only confirm a flare once the X-ray flux is already rising. Even a 10–60 minute prediction window lets operators safe-mode satellites, reroute polar flights, and warn grid operators.</p>
+          <p class="card-text">For ISRO specifically, Aditya-L1 provides India a sovereign, continuous solar X-ray dataset; an indigenous forecasting capability reduces dependence on foreign space-weather feeds and directly supports future missions like Gaganyaan crew radiation safety, navigation constellations, and deep-space communications.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="scroll-section" id="sec-payloads">
+      <div class="section-content">
+        <div class="glass-card payloads-card">
+          <div class="card-border"></div>
+          <span class="card-num">04</span>
+          <h2 class="card-title">Scientific Payloads</h2>
+          <p class="card-text">Equipped with 7 state-of-the-art instruments developed by ISRO and Indian research institutions to study the solar atmosphere, magnetic fields, and space environment.</p>
+          
+          <div class="payloads-slider">
+            <div class="payload-tab active" data-payload="velc">VELC</div>
+            <div class="payload-tab" data-payload="suit">SUIT</div>
+            <div class="payload-tab" data-payload="aspex">ASPEX</div>
+            <div class="payload-tab" data-payload="papa">PAPA</div>
+            <div class="payload-tab" data-payload="solexs">SoLEXS</div>
+            <div class="payload-tab" data-payload="hel1os">HEL1OS</div>
+            <div class="payload-tab" data-payload="mag">MAG</div>
+          </div>
+
+          <div class="payload-detail-container">
+            <div id="payload-velc" class="payload-detail active">
+              <h4>Visible Emission Line Coronagraph (VELC)</h4>
+              <p>Studies the solar corona's dynamics and magnetic fields. It is the primary payload, designed to capture 1,440 images of the Sun daily.</p>
+            </div>
+            <div id="payload-suit" class="payload-detail">
+              <h4>Solar Ultraviolet Imaging Telescope (SUIT)</h4>
+              <p>Images the solar Photosphere and Chromosphere in near Ultraviolet (UV), observing the Sun's dynamic atmospheric layers.</p>
+            </div>
+            <div id="payload-aspex" class="payload-detail">
+              <h4>Aditya Solar wind Particle Experiment (ASPEX)</h4>
+              <p>Analyzes solar wind particles (electrons, protons, and alpha particles) and their energy distribution.</p>
+            </div>
+            <div id="payload-papa" class="payload-detail">
+              <h4>Plasma Analyser Package for Aditya (PAPA)</h4>
+              <p>Measures solar wind plasma composition and identifies components contributing to space weather events.</p>
+            </div>
+            <div id="payload-solexs" class="payload-detail">
+              <h4>Solar Low Energy X-ray Spectrometer (SoLEXS)</h4>
+              <p>Monitors soft X-ray emissions to study solar flare activities and heating mechanisms of the solar corona.</p>
+            </div>
+            <div id="payload-hel1os" class="payload-detail">
+              <h4>High Energy L1 Orbiting X-ray Spectrometer (HEL1OS)</h4>
+              <p>Observes hard X-ray emissions from high-energy events in the solar atmosphere, tracking solar flare kinetics.</p>
+            </div>
+            <div id="payload-mag" class="payload-detail">
+              <h4>Magnetometer (MAG)</h4>
+              <p>Measures the magnitude and direction of the interplanetary magnetic field at the Lagrangian Point L1.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="scroll-section" id="sec-corona">
+      <div class="section-content right-align">
+        <div class="glass-card">
+          <div class="card-border"></div>
+          <span class="card-num">05</span>
+          <h2 class="card-title">The Corona Heating Mystery</h2>
+          <p class="card-text">Why is the Sun's outer corona millions of degrees hotter than its surface? Aditya-L1 gathers critical data to solve this enduring mystery in astrophysics, tracking coronal heating dynamics.</p>
+          <div class="card-stats">
+            <div class="stat-box">
+              <span class="stat-num">> 1M°C</span>
+              <span class="stat-label">Corona Temp</span>
+            </div>
+            <div class="stat-box">
+              <span class="stat-num">6,000°C</span>
+              <span class="stat-label">Surface Temp</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="scroll-section" id="sec-journey">
+      <div class="section-content">
+        <div class="glass-card final-card">
+          <div class="card-border"></div>
+          <span class="card-num">06</span>
+          <h2 class="card-title">A Historic Orbit</h2>
+          <p class="card-text">Launched on September 2, 2023, onboard the PSLV-C57 rocket, Aditya-L1 completed its 127-day journey to enter its halo orbit on January 6, 2024. Today, it stands as a testament to pioneering space science.</p>
+          <div class="cta-actions">
+            <button class="btn btn-primary" onclick="restartJourney()">REPLAY MISSION</button>
+            <button class="btn btn-secondary" onclick="toggleAutoplay()">AUTOPLAY OVERVIEW</button>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- INTERACTIVE PLAYBACK CONTROLS -->
+  <div class="hud-controls-dock">
+    <div class="hud-controls-inner">
+      <button id="btn-play" class="control-btn" title="Autoplay Animation">
+        <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
+          <path d="M8 5v14l11-7z"/>
+        </svg>
+      </button>
+      
+      <div class="scrub-container">
+        <span class="scrub-time">F-001</span>
+        <input type="range" id="scrub-slider" min="1" max="210" value="1" class="custom-slider">
+        <span class="scrub-time">F-210</span>
+      </div>
+
+      <div class="speed-selector">
+        <button class="speed-btn active" data-speed="1">1x</button>
+        <button class="speed-btn" data-speed="1.5">1.5x</button>
+        <button class="speed-btn" data-speed="2">2x</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
